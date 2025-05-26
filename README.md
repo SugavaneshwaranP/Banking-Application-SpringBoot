@@ -1,1 +1,1 @@
-# SugavaneshwaranP-Banking-Application-SpringBoot
+Banking-Application-SpringBoot
