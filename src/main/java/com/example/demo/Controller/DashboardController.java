@@ -33,7 +33,7 @@ public class DashboardController {
             return "redirect:/login";
         }
 
-        // Fetch customer details from the database
+        // Fetch customer details from the database (fresh data)
         CustomerEntity customer = customerService.getCustomerByAccountNumber(accountNumber);
 
         // If customer details are not found, redirect to login with an error message
@@ -45,10 +45,13 @@ public class DashboardController {
         // Add customer details to the model for the dashboard view
         model.addAttribute("customerName", customer.getName());
         model.addAttribute("accountNumber", customer.getAccountNumber());
-        model.addAttribute("accountType", customer.getAccountNumber());
+        model.addAttribute("accountType", "Savings Account"); // Fixed: was duplicating accountNumber
         model.addAttribute("accountBalance", customer.getBalance());
+        model.addAttribute("branchName", customer.getBranchName());
+        model.addAttribute("email", customer.getEmail());
+        model.addAttribute("mobile", customer.getMobile());
 
         // Render the dashboard page
-        return "dashboard"; // This should map to `dashboard.jsp`
+        return "dashboard";
     }
 }

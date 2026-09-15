@@ -38,8 +38,9 @@ public class LoginController {
             // Store user details in session
             session.setAttribute("customerName", user.getName());
             session.setAttribute("accountNumber", user.getAccountNumber());
-            session.setAttribute("accountType", user.getAccountNumber());
             session.setAttribute("accountBalance", user.getBalance());
+            session.setAttribute("branchName", user.getBranchName());
+            session.setAttribute("email", user.getEmail());
 
             return "redirect:/dashboard"; // Redirect to dashboard
         } else {

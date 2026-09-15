@@ -7,3 +7,4 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Intege
 	CustomerEntity findByEmail(String email);
 	CustomerEntity findByAccountNumber(String accountNumber);
 }
+ 

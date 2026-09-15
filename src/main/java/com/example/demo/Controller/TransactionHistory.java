@@ -22,6 +22,7 @@ public class TransactionHistory {
         }
 
         model.addAttribute("transactions", transactionService.getTransactionsByAccountNumber(accountNumber));
+        model.addAttribute("accountNumber", accountNumber);
         return "TransactionHistory";
     }
 }

@@ -7,11 +7,17 @@ import com.example.demo.Repo.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Collections;
 
 @Service
 public class TransactionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -25,6 +31,16 @@ public class TransactionService {
     @Transactional
     public String transferMoney(String senderAccount, String receiverAccount, BigDecimal amount) {
         try {
+            // Validate amount
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                return "Transfer amount must be greater than zero!";
+            }
+
+            // Cannot transfer to self
+            if (senderAccount.equals(receiverAccount)) {
+                return "Cannot transfer to the same account!";
+            }
+
             // Fetch sender and receiver details
             CustomerEntity sender = customerRepository.findByAccountNumber(senderAccount);
             CustomerEntity receiver = customerRepository.findByAccountNumber(receiverAccount);
@@ -66,15 +82,28 @@ public class TransactionService {
             return "Transfer successful!";
 
         } catch (Exception e) {
-            // Log the exception and return a general error message
-            e.printStackTrace();
+            logger.error("Error occurred while processing the transfer", e);
             return "An error occurred while processing the transfer!";
         }
     }
 
-	public Object getTransactionsByAccountNumber(String accountNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Fetch all transactions for a given account number (sent and received).
+     *
+     * @param accountNumber The account number to fetch transactions for.
+     * @return List of TransactionEntity objects, or empty list if none found.
+     */
+    public List<TransactionEntity> getTransactionsByAccountNumber(String accountNumber) {
+        try {
+            if (accountNumber == null || accountNumber.isBlank()) {
+                return Collections.emptyList();
+            }
+            return transactionRepository
+                    .findBySenderAccountOrReceiverAccountOrderByTransactionDateDesc(
+                            accountNumber, accountNumber);
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching transactions for account: " + accountNumber, e);
+            return Collections.emptyList();
+        }
+    }
 }
-

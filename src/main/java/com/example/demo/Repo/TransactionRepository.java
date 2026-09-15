@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
     List<TransactionEntity> findBySenderAccount(String senderAccount);
+    List<TransactionEntity> findBySenderAccountOrReceiverAccountOrderByTransactionDateDesc(
+            String senderAccount, String receiverAccount);
 }
